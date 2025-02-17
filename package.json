@@ -1,0 +1,20 @@
+{
+  "name": "filesystem-api",
+  "version": "1.0.0",
+  "description": "Secure REST API for local filesystem operations",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "express-fileupload": "^1.4.3",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+} 
