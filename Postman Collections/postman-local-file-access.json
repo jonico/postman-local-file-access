@@ -257,7 +257,8 @@
 								"value": "Bearer {{token}}"
 							}
 						],
-						"url": "{{baseUrl}}/api/files/file.txt"
+						"url": "{{baseUrl}}/api/files/file.txt",
+						"description": "# File Download\n\nThis endpoint makes an HTTP GET request to retrieve the file \"file.txt\".\n\n### Request\n\n- Method: GET\n    \n- URL: `{{baseUrl}}/api/files/file.txt`\n    \n\n### Response\n\n- Status: 200\n    \n- Content-Type: text/plain\n    \n\nThe response contains the content of the file \"file.txt\", which in this case is \"Hello, World!\"."
 					},
 					"response": [
 						{
@@ -820,7 +821,8 @@
 								}
 							}
 						},
-						"url": "{{baseUrl}}/api/files/subfolder/file2.txt"
+						"url": "{{baseUrl}}/api/files/subfolder/file2.txt",
+						"description": "# File Upload\n\nThis endpoint allows you to upload a file to the server.\n\n## Request Body\n\n- `content`: The content of the file to be uploaded.\n    \n\n## Response\n\n- `message`: A message indicating the status of the file upload."
 					},
 					"response": [
 						{
