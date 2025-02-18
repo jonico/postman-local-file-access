@@ -1419,7 +1419,8 @@
 								"value": "Bearer {{token}}"
 							}
 						],
-						"url": "{{baseUrl}}/api/directories/sub-folder"
+						"url": "{{baseUrl}}/api/directories/sub-folder",
+						"description": "This endpoint makes an HTTP GET request to retrieve the list of subdirectories and ordinary files within the specified \"sub-folder\" directory.\n\n### Request\n\n- Method: GET\n    \n- URL: {{baseUrl}}/api/directories/sub-folder\n    \n\n### Response\n\nThe endpoint returns a JSON array with objects representing the subdirectories and ordinary files within the \"sub-folder\" directory. Each object in the array includes the following properties:\n\n- \"name\": (string) The name of the subdirectory or file.\n    \n- \"path\": (string) The path of the subdirectory or file.\n    \n- \"isDirectory\": (boolean) Indicates whether the item is a directory (true) or a file (false).\n    \n- \"size\": (number) The size of the file in bytes. For directories, the size is 0.\n    \n- \"modified\": (string) The date and time when the item was last modified.\n    \n\nExample response:\n\n``` json\n[\n    {\n        \"name\": \"\",\n        \"path\": \"\",\n        \"isDirectory\": true,\n        \"size\": 0,\n        \"modified\": \"\"\n    }\n]\n\n ```"
 					},
 					"response": [
 						{
