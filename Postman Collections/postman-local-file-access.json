@@ -28,7 +28,7 @@
 							"raw": "{\n    \"token\": \"{{token}}\"\n}"
 						},
 						"url": "{{baseUrl}}/api/auth/setup",
-						"description": "### Request Description\n\nThis endpoint is used to set up authentication using an HTTP POST request to `{{baseUrl}}/api/auth/setup`. The request body should contain a JSON object with a `token` key.\n\n### Request Body\n\n- `token` (string): The token used for authentication setup.\n    \n\n### Response\n\nThe response for this request is in JSON format with a schema as follows:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"message\": {\n            \"type\": \"string\"\n        }\n    }\n}\n\n ```\n\nThe response contains a `message` field, which provides information about the status of the authentication setup.\n\n### Example Response\n\n``` json\n{\n    \"message\": \"Token set successfully\"\n}\n\n ```"
+						"description": "#### HTTP POST /api/auth/setup\n\nThis endpoint is used to set up authentication.\n\n##### Request Body\n\n- `token` (string): The token used for authentication setup.\n    \n\n##### Example Request Body\n\n``` json\n{\n    \"token\": \"{{token}}\"\n}\n\n ```\n\n##### Response\n\nThe response for this request is in JSON format with a schema as follows:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"message\": {\n            \"type\": \"string\"\n        }\n    }\n}\n\n ```\n\nThe response contains a `message` field, which provides information about the status of the authentication setup.\n\n##### Example Response\n\n``` json\n{\n    \"message\": \"Token set successfully\"\n}\n\n ```"
 					},
 					"response": [
 						{
