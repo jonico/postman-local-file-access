@@ -573,7 +573,7 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/path/to/local/file"
+									"src": "/Users/johannesnicolai/Downloads/7-coders.jpeg"
 								}
 							]
 						},
@@ -821,7 +821,7 @@
 								}
 							}
 						},
-						"url": "{{baseUrl}}/api/files/subfolder/file2.txt",
+						"url": "{{baseUrl}}/api/files/file2.txt",
 						"description": "# File Upload\n\nThis endpoint allows you to upload a file to the server.\n\n## Request Body\n\n- `content`: The content of the file to be uploaded.\n    \n\n## Response\n\n- `message`: A message indicating the status of the file upload."
 					},
 					"response": [
@@ -1063,7 +1063,8 @@
 							"mode": "raw",
 							"raw": "{\n    \"content\": \"Updated file content\"\n}"
 						},
-						"url": "{{baseUrl}}/api/files/path/to/your/file.txt"
+						"url": "{{baseUrl}}/api/files/file.txt",
+						"description": "This endpoint allows you to update the content of a specific file by sending an HTTP PUT request to {{baseUrl}}/api/files/file.txt.\n\n### Request Body\n\nThe request should include a raw JSON body with the following parameter:\n\n- `content`: The updated content of the file.\n    \n\n### Response\n\nUpon a successful execution, the endpoint returns a 200 status with a JSON response containing a `message` key. The value of the `message` key will provide information about the success of the update operation.\n\n#### Example Response\n\n``` json\n{\n    \"message\": \"\"\n}\n\n ```"
 					},
 					"response": [
 						{
@@ -1294,7 +1295,8 @@
 								"value": "Bearer {{token}}"
 							}
 						],
-						"url": "{{baseUrl}}/api/files/path/to/your/file.txt"
+						"url": "{{baseUrl}}/api/files/file.txt",
+						"description": "### Delete File\n\nDeletes the specified file from the server.\n\n#### Request Body\n\nThis endpoint does not require a request body.\n\n#### Response\n\n- Status: 200\n    \n- Content-Type: application/json\n    \n\n``` json\n{\n    \"message\": \"\"\n}\n\n ```"
 					},
 					"response": [
 						{
