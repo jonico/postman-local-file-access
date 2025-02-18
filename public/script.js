@@ -1,4 +1,5 @@
 let token = localStorage.getItem('api-token');
+let currentDirectory = ''; // Track current directory path
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
@@ -124,28 +125,8 @@ async function loadData() {
     if (!token) return;
 
     try {
-        // Load current directory contents
-        const dirResponse = await fetchWithAuth('/api/directories');
-        if (dirResponse.status === 401) {
-            // Token is invalid
-            token = null;
-            localStorage.removeItem('api-token');
-            updateUIState();
-            return;
-        }
-        
-        if (!dirResponse.ok) {
-            throw new Error('Failed to load directory contents');
-        }
-        
-        const items = await dirResponse.json();
-        
-        // Split items into files and directories
-        const files = items.filter(item => !item.isDirectory);
-        const directories = items.filter(item => item.isDirectory);
-        
-        renderFileList(files);
-        renderDirectoryList(directories);
+        // Load root directory contents
+        await loadDirectory('');
     } catch (error) {
         if (error.message.includes('No token set')) {
             updateUIState();
@@ -175,7 +156,9 @@ async function uploadFile() {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch(`/api/files/${file.name}`, {
+        // Use current directory when uploading
+        const uploadPath = currentDirectory ? `${currentDirectory}/${file.name}` : file.name;
+        const response = await fetch(`/api/files/${uploadPath}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -186,7 +169,7 @@ async function uploadFile() {
         if (!response.ok) throw new Error('Failed to upload file');
         
         fileInput.value = '';
-        await loadData();
+        await loadDirectory(currentDirectory); // Reload current directory
     } catch (error) {
         alert('Error uploading file: ' + error.message);
     }
@@ -222,7 +205,7 @@ async function deleteFile(filePath) {
     try {
         const response = await fetchWithAuth(`/api/files/${filePath}`, { method: 'DELETE' });
         if (!response.ok) throw new Error('Failed to delete file');
-        await loadData();
+        await loadDirectory(currentDirectory);
     } catch (error) {
         alert('Error deleting file: ' + error.message);
     }
@@ -238,11 +221,13 @@ async function createDirectory() {
     }
 
     try {
-        const response = await fetchWithAuth(`/api/directories/${dirName}`, { method: 'POST' });
+        // Use current directory when creating new directory
+        const dirPath = currentDirectory ? `${currentDirectory}/${dirName}` : dirName;
+        const response = await fetchWithAuth(`/api/directories/${dirPath}`, { method: 'POST' });
         if (!response.ok) throw new Error('Failed to create directory');
         
         dirInput.value = '';
-        await loadData();
+        await loadDirectory(currentDirectory); // Reload current directory
     } catch (error) {
         alert('Error creating directory: ' + error.message);
     }
@@ -253,8 +238,16 @@ async function deleteDirectory(dirPath) {
     
     try {
         const response = await fetchWithAuth(`/api/directories/${dirPath}`, { method: 'DELETE' });
-        if (!response.ok) throw new Error('Failed to delete directory');
-        await loadData();
+        if (!response.ok) {
+            const data = await response.json();
+            if (data.error === 'Directory is not empty') {
+                alert('Cannot delete directory because it contains files or subdirectories. Please delete the contents first.');
+            } else {
+                throw new Error('Failed to delete directory');
+            }
+            return;
+        }
+        await loadDirectory(currentDirectory);
     } catch (error) {
         alert('Error deleting directory: ' + error.message);
     }
@@ -284,10 +277,13 @@ async function validateToken() {
     }
 }
 
-// Add function to load specific directory
+// Update loadDirectory function to handle navigation
 async function loadDirectory(dirPath) {
     try {
-        const response = await fetchWithAuth(`/api/directories/${dirPath}`);
+        // Update current directory
+        currentDirectory = dirPath || '';
+        
+        const response = await fetchWithAuth(`/api/directories/${currentDirectory}`);
         if (!response.ok) throw new Error('Failed to load directory');
         
         const items = await response.json();
@@ -299,17 +295,39 @@ async function loadDirectory(dirPath) {
         renderFileList(files);
         renderDirectoryList(directories);
         
-        // Update current directory display
-        updateCurrentPath(dirPath);
+        // Update current directory display and navigation
+        updateDirectoryNavigation();
     } catch (error) {
         alert('Error loading directory: ' + error.message);
     }
 }
 
-// Add function to display current path
-function updateCurrentPath(dirPath) {
+// Add new function for directory navigation
+function updateDirectoryNavigation() {
     const pathDisplay = document.getElementById('current-path');
-    if (pathDisplay) {
-        pathDisplay.textContent = dirPath || '/';
+    const navigationHtml = [];
+    
+    // Add root directory link
+    navigationHtml.push(`<a href="#" class="dir-nav" data-path="">root</a>`);
+    
+    if (currentDirectory) {
+        // Split path and create navigation links
+        const parts = currentDirectory.split('/');
+        let accumPath = '';
+        
+        parts.forEach((part, index) => {
+            accumPath = accumPath ? `${accumPath}/${part}` : part;
+            navigationHtml.push(` / <a href="#" class="dir-nav" data-path="${accumPath}">${part}</a>`);
+        });
     }
+    
+    pathDisplay.innerHTML = navigationHtml.join('');
+    
+    // Add click handlers for navigation links
+    document.querySelectorAll('.dir-nav').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            loadDirectory(e.target.dataset.path);
+        });
+    });
 }
