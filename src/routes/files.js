@@ -49,9 +49,15 @@ router.get('/:path(*)', async (req, res) => {
     const filePath = sanitizePath(req.params.path);
     const fullPath = path.join(ROOT_DIR, filePath);
     
-    // Get file stats to determine if it's binary
+    // Check if path exists and is a file
     const stats = await fsPromises.stat(fullPath);
-    
+    if (stats.isDirectory()) {
+      return res.status(400).json({ 
+        error: 'Path is a directory. Use /api/directories endpoint instead',
+        code: 'NOT_A_FILE'
+      });
+    }
+
     // Set proper Content-Type header
     const ext = path.extname(filePath).toLowerCase();
     const mimeTypes = {
@@ -71,12 +77,16 @@ router.get('/:path(*)', async (req, res) => {
     res.setHeader('Content-Type', contentType);
     res.setHeader('Content-Length', stats.size);
     
-    // Stream the file instead of loading it into memory
+    // Stream the file
     const fileStream = fs.createReadStream(fullPath);
     fileStream.pipe(res);
   } catch (error) {
-    console.error('Error reading file:', error);
-    res.status(404).json({ error: 'File not found' });
+    if (error.code === 'ENOENT') {
+      res.status(404).json({ error: 'File not found' });
+    } else {
+      console.error('Error reading file:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 });
 
@@ -85,6 +95,30 @@ router.post('/:path(*)', async (req, res) => {
   try {
     const filePath = sanitizePath(req.params.path);
     const fullPath = path.join(ROOT_DIR, filePath);
+    
+    // Check if parent directory exists
+    const parentDir = path.dirname(fullPath);
+    try {
+      const stats = await fsPromises.stat(parentDir);
+      if (!stats.isDirectory()) {
+        return res.status(400).json({ error: 'Parent path is not a directory' });
+      }
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        return res.status(404).json({ error: 'Parent directory not found' });
+      }
+      throw error;
+    }
+
+    // Check if target exists and is a directory
+    try {
+      const stats = await fsPromises.stat(fullPath);
+      if (stats.isDirectory()) {
+        return res.status(400).json({ error: 'Path is a directory' });
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
     
     if (!req.files || !req.files.file) {
       const { content } = req.body;
@@ -95,6 +129,7 @@ router.post('/:path(*)', async (req, res) => {
     
     res.json({ message: 'File created successfully' });
   } catch (error) {
+    console.error('Error creating file:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -104,11 +139,25 @@ router.put('/:path(*)', async (req, res) => {
   try {
     const filePath = sanitizePath(req.params.path);
     const fullPath = path.join(ROOT_DIR, filePath);
-    const { content } = req.body;
     
+    // Check if path exists and is a file
+    try {
+      const stats = await fsPromises.stat(fullPath);
+      if (stats.isDirectory()) {
+        return res.status(400).json({ error: 'Path is a directory' });
+      }
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        return res.status(404).json({ error: 'File not found' });
+      }
+      throw error;
+    }
+
+    const { content } = req.body;
     await fsPromises.writeFile(fullPath, content);
     res.json({ message: 'File updated successfully' });
   } catch (error) {
+    console.error('Error updating file:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -118,9 +167,24 @@ router.delete('/:path(*)', async (req, res) => {
   try {
     const filePath = sanitizePath(req.params.path);
     const fullPath = path.join(ROOT_DIR, filePath);
+    
+    // Check if path exists and is a file
+    try {
+      const stats = await fsPromises.stat(fullPath);
+      if (stats.isDirectory()) {
+        return res.status(400).json({ error: 'Path is a directory. Use /api/directories endpoint instead' });
+      }
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        return res.status(404).json({ error: 'File not found' });
+      }
+      throw error;
+    }
+
     await fsPromises.unlink(fullPath);
     res.json({ message: 'File deleted successfully' });
   } catch (error) {
+    console.error('Error deleting file:', error);
     res.status(500).json({ error: error.message });
   }
 });

@@ -13,7 +13,105 @@ A secure REST API that exposes local filesystem operations with authentication.
 - 🚫 Path traversal protection
 - 🌐 Web UI for easy file management
 - 🐳 Docker support
-- 📚 Postman collection included
+- 📚 [Postman collection](Postman%20Collections/postman-local-file-access.json) included for testing
+
+## Testing with Postman
+
+Import the [Postman collection](Postman%20Collections/postman-local-file-access.json) to test all endpoints. The collection includes:
+- Authentication setup
+- File operations (read, create, update, delete)
+- Directory operations (list, create, delete)
+- Example requests with proper headers and body formats
+
+## API Documentation
+
+### Authentication
+
+All API endpoints (except token setup) require a Bearer token in the Authorization header:
+```
+Authorization: Bearer your-token
+```
+
+### Endpoints
+
+#### Authentication
+- `POST /api/auth/setup` - Set up authentication token
+  ```http
+  POST /api/auth/setup
+  Content-Type: application/json
+
+  {
+      "token": "your-secret-token"
+  }
+  ```
+
+#### Files
+- `GET /api/files/{path}` - Read file contents
+  - Returns file content with appropriate Content-Type header
+  - Supports both binary and text files
+  - Returns 400 if path points to a directory
+  - Returns 404 if file not found
+
+- `POST /api/files/{path}` - Create/Upload file
+  - Upload using multipart/form-data with "file" field
+  - Returns 400 if path points to a directory
+  - Returns 404 if parent directory not found
+
+- `PUT /api/files/{path}` - Update file contents
+  ```http
+  Content-Type: application/json
+
+  {
+      "content": "Updated file content"
+  }
+  ```
+  - Returns 400 if path points to a directory
+  - Returns 404 if file not found
+
+- `DELETE /api/files/{path}` - Delete file
+  - Returns 400 if path points to a directory
+  - Returns 404 if file not found
+
+#### Directories
+- `GET /api/directories/{path}` - List directory contents
+  - Lists all files and subdirectories
+  - Use without path parameter to list root directory
+  - Returns array of items with metadata:
+  ```json
+  [
+      {
+          "name": "example.txt",
+          "path": "folder/example.txt",
+          "isDirectory": false,
+          "size": 1234,
+          "modified": "2024-01-20T12:00:00.000Z"
+      }
+  ]
+  ```
+
+- `POST /api/directories/{path}` - Create directory
+  - Returns 400 if directory exists
+  - Returns 404 if parent directory not found
+
+- `DELETE /api/directories/{path}` - Delete directory
+  - Returns 400 if directory not empty
+  - Returns 404 if directory not found
+
+### Error Responses
+
+All error responses follow this format:
+```json
+{
+    "error": "Error message description",
+    "code": "ERROR_CODE"  // Optional error code
+}
+```
+
+Common status codes:
+- 400: Bad Request
+- 401: Unauthorized
+- 404: Not Found
+- 500: Internal Server Error
 
 ## Setup
 

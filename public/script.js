@@ -82,22 +82,20 @@ function renderFileList(files) {
     const fileList = document.getElementById('file-list');
     fileList.innerHTML = files.map(file => `
         <div class="list-group-item">
-            <span>${file.name} ${file.isDirectory ? '(Directory)' : `(${formatSize(file.size)})`}</span>
+            <span>${file.name} (${formatSize(file.size)})</span>
             <div class="action-buttons">
-                ${!file.isDirectory ? `
-                    <button class="btn btn-sm btn-primary download-btn" data-filename="${file.name}">Download</button>
-                    <button class="btn btn-sm btn-danger delete-file-btn" data-filename="${file.name}">Delete</button>
-                ` : ''}
+                <button class="btn btn-sm btn-primary download-btn" data-filepath="${file.path}">Download</button>
+                <button class="btn btn-sm btn-danger delete-file-btn" data-filepath="${file.path}">Delete</button>
             </div>
         </div>
     `).join('');
 
     // Add event listeners for dynamic buttons
     fileList.querySelectorAll('.download-btn').forEach(btn => {
-        btn.addEventListener('click', () => downloadFile(btn.dataset.filename));
+        btn.addEventListener('click', () => downloadFile(btn.dataset.filepath));
     });
     fileList.querySelectorAll('.delete-file-btn').forEach(btn => {
-        btn.addEventListener('click', () => deleteFile(btn.dataset.filename));
+        btn.addEventListener('click', () => deleteFile(btn.dataset.filepath));
     });
 }
 
@@ -106,13 +104,19 @@ function renderDirectoryList(directories) {
     dirList.innerHTML = directories.map(dir => `
         <div class="list-group-item">
             <span>${dir.name}</span>
-            <button class="btn btn-sm btn-danger delete-dir-btn" data-dirname="${dir.name}">Delete</button>
+            <div class="action-buttons">
+                <button class="btn btn-sm btn-primary open-dir-btn" data-dirpath="${dir.path}">Open</button>
+                <button class="btn btn-sm btn-danger delete-dir-btn" data-dirpath="${dir.path}">Delete</button>
+            </div>
         </div>
     `).join('');
 
     // Add event listeners for dynamic buttons
     dirList.querySelectorAll('.delete-dir-btn').forEach(btn => {
-        btn.addEventListener('click', () => deleteDirectory(btn.dataset.dirname));
+        btn.addEventListener('click', () => deleteDirectory(btn.dataset.dirpath));
+    });
+    dirList.querySelectorAll('.open-dir-btn').forEach(btn => {
+        btn.addEventListener('click', () => loadDirectory(btn.dataset.dirpath));
     });
 }
 
@@ -120,9 +124,9 @@ async function loadData() {
     if (!token) return;
 
     try {
-        // Load files
-        const filesResponse = await fetchWithAuth('/api/files');
-        if (filesResponse.status === 401) {
+        // Load current directory contents
+        const dirResponse = await fetchWithAuth('/api/directories');
+        if (dirResponse.status === 401) {
             // Token is invalid
             token = null;
             localStorage.removeItem('api-token');
@@ -130,19 +134,17 @@ async function loadData() {
             return;
         }
         
-        if (!filesResponse.ok) {
-            throw new Error('Failed to load files');
+        if (!dirResponse.ok) {
+            throw new Error('Failed to load directory contents');
         }
         
-        const files = await filesResponse.json();
+        const items = await dirResponse.json();
+        
+        // Split items into files and directories
+        const files = items.filter(item => !item.isDirectory);
+        const directories = items.filter(item => item.isDirectory);
+        
         renderFileList(files);
-
-        // Load directories
-        const dirResponse = await fetchWithAuth('/api/directories');
-        if (!dirResponse.ok) {
-            throw new Error('Failed to load directories');
-        }
-        const directories = await dirResponse.json();
         renderDirectoryList(directories);
     } catch (error) {
         if (error.message.includes('No token set')) {
@@ -190,9 +192,9 @@ async function uploadFile() {
     }
 }
 
-async function downloadFile(fileName) {
+async function downloadFile(filePath) {
     try {
-        const response = await fetch(`/api/files/${fileName}`, {
+        const response = await fetch(`/api/files/${filePath}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -204,7 +206,7 @@ async function downloadFile(fileName) {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = fileName;
+        a.download = filePath.split('/').pop();
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -214,11 +216,11 @@ async function downloadFile(fileName) {
     }
 }
 
-async function deleteFile(fileName) {
-    if (!confirm(`Are you sure you want to delete ${fileName}?`)) return;
+async function deleteFile(filePath) {
+    if (!confirm(`Are you sure you want to delete ${filePath}?`)) return;
     
     try {
-        const response = await fetchWithAuth(`/api/files/${fileName}`, { method: 'DELETE' });
+        const response = await fetchWithAuth(`/api/files/${filePath}`, { method: 'DELETE' });
         if (!response.ok) throw new Error('Failed to delete file');
         await loadData();
     } catch (error) {
@@ -246,11 +248,11 @@ async function createDirectory() {
     }
 }
 
-async function deleteDirectory(dirName) {
-    if (!confirm(`Are you sure you want to delete directory ${dirName}?`)) return;
+async function deleteDirectory(dirPath) {
+    if (!confirm(`Are you sure you want to delete directory ${dirPath}?`)) return;
     
     try {
-        const response = await fetchWithAuth(`/api/directories/${dirName}`, { method: 'DELETE' });
+        const response = await fetchWithAuth(`/api/directories/${dirPath}`, { method: 'DELETE' });
         if (!response.ok) throw new Error('Failed to delete directory');
         await loadData();
     } catch (error) {
@@ -279,5 +281,35 @@ async function validateToken() {
     } catch (error) {
         console.error('Token validation error:', error);
         return false;
+    }
+}
+
+// Add function to load specific directory
+async function loadDirectory(dirPath) {
+    try {
+        const response = await fetchWithAuth(`/api/directories/${dirPath}`);
+        if (!response.ok) throw new Error('Failed to load directory');
+        
+        const items = await response.json();
+        
+        // Split items into files and directories
+        const files = items.filter(item => !item.isDirectory);
+        const directories = items.filter(item => item.isDirectory);
+        
+        renderFileList(files);
+        renderDirectoryList(directories);
+        
+        // Update current directory display
+        updateCurrentPath(dirPath);
+    } catch (error) {
+        alert('Error loading directory: ' + error.message);
+    }
+}
+
+// Add function to display current path
+function updateCurrentPath(dirPath) {
+    const pathDisplay = document.getElementById('current-path');
+    if (pathDisplay) {
+        pathDisplay.textContent = dirPath || '/';
     }
 }
