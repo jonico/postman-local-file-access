@@ -1733,7 +1733,8 @@
 								"value": "Bearer {{token}}"
 							}
 						],
-						"url": "{{baseUrl}}/api/directories"
+						"url": "{{baseUrl}}/api/directories",
+						"description": "This endpoint makes an HTTP GET request to retrieve a list of all entries in the root data directory, including ordinary files and subdirectories. The response will be in JSON format and will include the name, path, whether it is a directory, size, and modification details for each entry.\n\n- \"name\": (string) The name of the directory.\n    \n- \"path\": (string) The path of the directory.\n    \n- \"isDirectory\": (boolean) Indicates whether the item is a directory.\n    \n- \"size\": (number) The size of the directory.\n    \n- \"modified\": (string) The date when the directory was last modified."
 					},
 					"response": [
 						{
@@ -1943,7 +1944,8 @@
 								"value": "Bearer {{token}}"
 							}
 						],
-						"url": "{{baseUrl}}/api/directories/path/to/new/directory"
+						"url": "{{baseUrl}}/api/directories/sub-folder",
+						"description": "### Add Sub-Folder\n\nThis endpoint allows the user to add a sub-folder within the directories.\n\n**Request Body**\n\n- No request body parameters required.\n    \n\n**Response**\n\n- Status: 200 OK\n    \n- Content-Type: application/json\n    \n- { \"message\": \"\"}"
 					},
 					"response": [
 						{
@@ -2257,7 +2259,7 @@
 							}
 						],
 						"url": "{{baseUrl}}/api/directories/sub-folder",
-						"description": "This endpoint allows the user to send an HTTP DELETE request to delete a sub-folder within the directories. Upon successful execution, the server returns a status code of 401 and a JSON response with an \"error\" and \"code\" field. The response may also include a \"message\" field in some examples. Below is the JSON schema for the response:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"error\": {\n      \"type\": \"string\"\n    },\n    \"code\": {\n      \"type\": \"string\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```\n\nThis endpoint is used to delete a sub-folder within the directories.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response\n\n- Status: 401\n    \n- Content-Type: application/json\n    \n\nExample Response Body:\n\n``` json\n{\"message\":\"\"}\n\n ```"
+						"description": "### Delete Sub-Folder Directory\n\nThis endpoint is used to delete a sub-folder directory.\n\n#### Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```"
 					},
 					"response": [
 						{
