@@ -2251,7 +2251,8 @@
 								"value": "Bearer {{token}}"
 							}
 						],
-						"url": "{{baseUrl}}/api/directories/sub-folder"
+						"url": "{{baseUrl}}/api/directories/sub-folder",
+						"description": "This endpoint allows the user to send an HTTP DELETE request to delete a sub-folder within the directories. Upon successful execution, the server returns a status code of 401 and a JSON response with an \"error\" and \"code\" field. The response may also include a \"message\" field in some examples. Below is the JSON schema for the response:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"error\": {\n      \"type\": \"string\"\n    },\n    \"code\": {\n      \"type\": \"string\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```\n\nThis endpoint is used to delete a sub-folder within the directories.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response\n\n- Status: 401\n    \n- Content-Type: application/json\n    \n\nExample Response Body:\n\n``` json\n{\"message\":\"\"}\n\n ```"
 					},
 					"response": [
 						{
