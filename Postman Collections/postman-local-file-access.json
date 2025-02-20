@@ -3049,12 +3049,12 @@
 									"key": "",
 									"type": "file",
 									"uuid": "55c6c67f-cd6c-4f85-a074-aa9c2ca5053f",
-									"src": "/Users/johannesnicolai/Downloads/deepseek-qwen.png"
+									"src": "/Users/johannesnicolai/Downloads/7-coders.jpeg"
 								}
 							]
 						},
 						"url": {
-							"raw": "https://postman-echo.com/post?fileName=my-file&directoryName=my-subdirectory",
+							"raw": "https://postman-echo.com/post?fileName=my-file.jpeg&directoryName=my-subdirectory",
 							"protocol": "https",
 							"host": [
 								"postman-echo",
@@ -3066,7 +3066,7 @@
 							"query": [
 								{
 									"key": "fileName",
-									"value": "my-file"
+									"value": "my-file.jpeg"
 								},
 								{
 									"key": "directoryName",
