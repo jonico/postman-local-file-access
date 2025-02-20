@@ -2663,14 +2663,91 @@
 			"name": "Package-Library-Use",
 			"item": [
 				{
-					"name": "echo",
-					"id": "ca142ead-043c-447e-9618-d79e6a040979",
+					"name": "Create a file and read its content",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "30f0f6e0-7dda-446b-95a7-5515d975f3c1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"// test whether company field is not blank",
+									"pm.test(\"Company field is not blank\", function () {",
+									"    pm.expect(jsonData.args.company).to.not.be.empty;",
+									"    // save company to a collection variable",
+									"    pm.collectionVariables.set(\"company\", jsonData.args.company);",
+									"",
+									"    // remove all special characters from company name and only use small letters",
+									"    var companyId = jsonData.args.company.replace(/[^a-zA-Z0-9]/g, \"\").toLowerCase();",
+									"",
+									"    // save company id to a collection variable",
+									"    pm.collectionVariables.set(\"companyId\", companyId);",
+									"})",
+									"",
+									"pm.test(\"Language Field is not blank and should be saved to collection variable with same name\", function () {",
+									"     v",
+									"     pm.expect(responseBody.args.language).to.exist.and.to.not.equal(\"\", \"Language field should not be blank\");",
+									"     pm.collectionVariables.set(\"language\", responseBody.args.language);",
+									"});",
+									"",
+									"pm.test(\"statusCode field is not blank and statusCode can be parsed into a number and should be saved to collection variable with same name\", function () {",
+									"    var responseBody = pm.response.json().args;",
+									"    pm.expect(responseBody.statusCode).to.exist.and.to.not.equal(\"\");",
+									"    pm.expect(parseInt(responseBody.statusCode)).to.not.be.NaN;",
+									"    pm.collectionVariables.set(\"statusCode\", parseInt(responseBody.statusCode));",
+									"});",
+									"   "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "09376198-1426-4438-9646-7baadad659d5",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "This is your file content as text",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://postman-echo.com/post?filename=your-file",
+							"protocol": "https",
+							"host": [
+								"postman-echo",
+								"com"
+							],
+							"path": [
+								"post"
+							],
+							"query": [
+								{
+									"key": "filename",
+									"value": "your-file"
+								},
+								{
+									"key": "order",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						}
 					},
 					"response": []
 				}
