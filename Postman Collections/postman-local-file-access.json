@@ -2683,7 +2683,7 @@
 									"",
 									"pm.test(\"Create and read file\", async () => {",
 									"    try {",
-									"        await fsLib.setupAuth(\"foobar\");",
+									"        await fsLib.setupAuth();",
 									"        await fsLib.createFile(fileName, fileContent);",
 									"        const content = await fsLib.readFile(fileName);",
 									"        pm.expect(content).to.equal(fileContent);",
@@ -2713,7 +2713,7 @@
 							"raw": "This is your file content as text",
 							"options": {
 								"raw": {
-									"language": "json"
+									"language": "text"
 								}
 							}
 						},
