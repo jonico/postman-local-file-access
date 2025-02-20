@@ -7,7 +7,6 @@ Node app to expose the content a local filesystem folder CRUD style including a 
 - 🔒 Secure authentication with token
 - 📁 CRUD operations for files and directories
 - 🌐 Web UI for easy file management / testing
-
 - 🚫 Path traversal protection
 - 🐳 Docker support
 - 📚 [Postman collection](Postman%20Collections/postman-local-file-access.json) included for testing
@@ -133,4 +132,76 @@ Authorization: Bearer your-token
 ### Error Responses
 
 All error responses follow this format:
+```json
+{
+    "error": "Error message description",
+    "code": "ERROR_CODE"  // Optional error code
+}
 ```
+
+Common status codes:
+- 400: Bad Request
+- 401: Unauthorized
+- 404: Not Found
+- 500: Internal Server Error
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file (optional):
+   ```
+   AUTH_TOKEN=your-predefined-token
+   PORT=3000
+   ```
+
+## Running the Application
+
+### Standard Mode
+
+```bash
+npm start
+```
+
+### Docker Mode
+
+#### Build Docker Image Locally
+
+```bash
+docker build -t local-filesystem-api .
+```
+
+#### Run Local Docker Image
+
+```bash
+docker run -p 3000:3000 -v $(pwd)/data:/app/data local-filesystem-api
+```
+
+#### Run Pre-built Image from GitHub Container Registry
+
+```bash
+docker run -p 3000:3000 -v $(pwd)/data:/app/data ghcr.io/postman-solutions-eng/postman-local-filesystem-api:latest
+```
+
+This will:
+- Pull the latest image from GitHub Container Registry
+- Map port 3000 to your local machine
+- Mount your local `data` directory to the container
+
+## Authentication
+
+If no `AUTH_TOKEN` is set in the environment variables, you need to set it via the API:
+
+```bash
+curl -X POST http://localhost:3000/api/auth -H "Content-Type: application/json" -d '{"token": "your-token"}'
+```
+
+## Security
+
+- Path traversal protection prevents accessing files outside the root directory
+- All API endpoints require authentication
+- Initial token setup can only be done once
+- Docker container runs with limited privileges
