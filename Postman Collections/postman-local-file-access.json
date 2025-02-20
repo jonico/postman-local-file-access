@@ -2893,7 +2893,244 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"id": "a38bcfac-b838-4b59-b564-48e635ce971c",
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "/**\n * Filesystem API Library\n * A collection of reusable functions for interacting with the filesystem API\n */\n\n/**\n * Get authentication token from parameter or environment\n * @param {string} [token] - Optional token parameter\n * @returns {string} The token to use\n * @throws {Error} If no token is available\n */\nfunction getToken(token) {\n    const envToken = pm.variables.get('token');\n    if (!token && !envToken) {\n        throw new Error('No token provided and no token found in environment');\n    }\n    return token || envToken;\n}\n\n/**\n * Setup authentication token\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from the auth setup endpoint\n */\nasync function setupAuth(token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/auth/setup`,\n        method: 'POST',\n        header: { 'Content-Type': 'application/json' },\n        body: { mode: 'raw', raw: JSON.stringify({ token: authToken }) }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Auth setup failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\n/**\n * Read file contents\n * @param {string} path - Path to the file\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<string>} File contents\n */\nasync function readFile(path, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'GET',\n        header: { 'Authorization': `Bearer ${authToken}` }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Read file failed: ${response.json().error}`);\n    }\n    return response.text();\n}\n\n/**\n * Create a new file\n * @param {string} path - Path where to create the file\n * @param {string} content - File content\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from create file endpoint\n */\nasync function createFile(path, content, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'POST',\n        header: {\n            'Authorization': `Bearer ${authToken}`,\n            'Content-Type': 'application/json'\n        },\n        body: {\n            mode: 'raw',\n            raw: { content }\n        }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Create file failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\n/**\n * Update file contents\n * @param {string} path - Path to the file\n * @param {string} content - New file content\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from update file endpoint\n */\nasync function updateFile(path, content, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'PUT',\n        header: {\n            'Authorization': `Bearer ${authToken}`,\n            'Content-Type': 'application/json'\n        },\n        body: {\n            mode: 'raw',\n            raw: { content }\n        }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Update file failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\n/**\n * Delete a file\n * @param {string} path - Path to the file to delete\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from delete file endpoint\n */\nasync function deleteFile(path, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'DELETE',\n        header: { 'Authorization': `Bearer ${authToken}` }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Delete file failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\nmodule.exports = {\n    setupAuth,\n    readFile,\n    createFile,\n    updateFile,\n    deleteFile\n}; ",
+									"options": {
+										"raw": {
+											"language": "text"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://postman-echo.com/post?fileName=your-file&directoryName=",
+									"protocol": "https",
+									"host": [
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"post"
+									],
+									"query": [
+										{
+											"key": "fileName",
+											"value": "your-file"
+										},
+										{
+											"key": "directoryName",
+											"value": ""
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 20 Feb 2025 18:20:21 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "5181"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"143d-soa6qNXYGcYmqwf/kWZ73/fKF80\""
+								},
+								{
+									"key": "set-cookie",
+									"value": "sails.sid=s%3ANnKpIyDExBuC84wN9TIjU5WUiT2fY1xw.mOeJgmd9uCu7DXkx%2FWu60WjRBSBEfvAKESRl7dudL2w; Path=/; HttpOnly"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"args\": {\n        \"fileName\": \"your-file\",\n        \"directoryName\": \"\"\n    },\n    \"data\": \"/**\\n * Filesystem API Library\\n * A collection of reusable functions for interacting with the filesystem API\\n */\\n\\n/**\\n * Get authentication token from parameter or environment\\n * @param {string} [token] - Optional token parameter\\n * @returns {string} The token to use\\n * @throws {Error} If no token is available\\n */\\nfunction getToken(token) {\\n    const envToken = pm.variables.get('token');\\n    if (!token && !envToken) {\\n        throw new Error('No token provided and no token found in environment');\\n    }\\n    return token || envToken;\\n}\\n\\n/**\\n * Setup authentication token\\n * @param {string} [token] - Optional authentication token\\n * @returns {Promise<Object>} Response from the auth setup endpoint\\n */\\nasync function setupAuth(token) {\\n    const authToken = getToken(token);\\n    const response = await pm.sendRequest({\\n        url: `${pm.variables.get('baseUrl')}/api/auth/setup`,\\n        method: 'POST',\\n        header: { 'Content-Type': 'application/json' },\\n        body: { mode: 'raw', raw: JSON.stringify({ token: authToken }) }\\n    });\\n    \\n    if (response.code !== 200) {\\n        throw new Error(`Auth setup failed: ${response.json().error}`);\\n    }\\n    return response.json();\\n}\\n\\n/**\\n * Read file contents\\n * @param {string} path - Path to the file\\n * @param {string} [token] - Optional authentication token\\n * @returns {Promise<string>} File contents\\n */\\nasync function readFile(path, token) {\\n    const authToken = getToken(token);\\n    const response = await pm.sendRequest({\\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\\n        method: 'GET',\\n        header: { 'Authorization': `Bearer ${authToken}` }\\n    });\\n    \\n    if (response.code !== 200) {\\n        throw new Error(`Read file failed: ${response.json().error}`);\\n    }\\n    return response.text();\\n}\\n\\n/**\\n * Create a new file\\n * @param {string} path - Path where to create the file\\n * @param {string} content - File content\\n * @param {string} [token] - Optional authentication token\\n * @returns {Promise<Object>} Response from create file endpoint\\n */\\nasync function createFile(path, content, token) {\\n    const authToken = getToken(token);\\n    const response = await pm.sendRequest({\\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\\n        method: 'POST',\\n        header: {\\n            'Authorization': `Bearer ${authToken}`,\\n            'Content-Type': 'application/json'\\n        },\\n        body: {\\n            mode: 'raw',\\n            raw: { content }\\n        }\\n    });\\n    \\n    if (response.code !== 200) {\\n        throw new Error(`Create file failed: ${response.json().error}`);\\n    }\\n    return response.json();\\n}\\n\\n/**\\n * Update file contents\\n * @param {string} path - Path to the file\\n * @param {string} content - New file content\\n * @param {string} [token] - Optional authentication token\\n * @returns {Promise<Object>} Response from update file endpoint\\n */\\nasync function updateFile(path, content, token) {\\n    const authToken = getToken(token);\\n    const response = await pm.sendRequest({\\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\\n        method: 'PUT',\\n        header: {\\n            'Authorization': `Bearer ${authToken}`,\\n            'Content-Type': 'application/json'\\n        },\\n        body: {\\n            mode: 'raw',\\n            raw: { content }\\n        }\\n    });\\n    \\n    if (response.code !== 200) {\\n        throw new Error(`Update file failed: ${response.json().error}`);\\n    }\\n    return response.json();\\n}\\n\\n/**\\n * Delete a file\\n * @param {string} path - Path to the file to delete\\n * @param {string} [token] - Optional authentication token\\n * @returns {Promise<Object>} Response from delete file endpoint\\n */\\nasync function deleteFile(path, token) {\\n    const authToken = getToken(token);\\n    const response = await pm.sendRequest({\\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\\n        method: 'DELETE',\\n        header: { 'Authorization': `Bearer ${authToken}` }\\n    });\\n    \\n    if (response.code !== 200) {\\n        throw new Error(`Delete file failed: ${response.json().error}`);\\n    }\\n    return response.json();\\n}\\n\\nmodule.exports = {\\n    setupAuth,\\n    readFile,\\n    createFile,\\n    updateFile,\\n    deleteFile\\n}; \",\n    \"files\": {},\n    \"form\": {},\n    \"headers\": {\n        \"host\": \"postman-echo.com\",\n        \"x-request-start\": \"t1740075621.123\",\n        \"connection\": \"close\",\n        \"content-length\": \"4188\",\n        \"x-forwarded-proto\": \"https\",\n        \"x-forwarded-port\": \"443\",\n        \"x-amzn-trace-id\": \"Root=1-67b77265-10db588672918a563fa2b9b2\",\n        \"authorization\": \"Bearer postman-secret-token\",\n        \"content-type\": \"text/plain\",\n        \"user-agent\": \"PostmanRuntime/7.43.0\",\n        \"accept\": \"*/*\",\n        \"postman-token\": \"2ca069e2-0f0d-43f4-8586-cac94db09007\",\n        \"accept-encoding\": \"gzip, deflate, br\",\n        \"cookie\": \"sails.sid=s%3AnSW56RoEgLdDy16RVVsep4LXEONFuE4t.EWifSKmDIlEQAzIIvlKv87Bnv0rU5nX4Swy0cg9vwM0\"\n    },\n    \"json\": null,\n    \"url\": \"https://postman-echo.com/post?fileName=your-file&directoryName=\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create a file in a subdirectory and then delete both of them again",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "30f0f6e0-7dda-446b-95a7-5515d975f3c1",
+								"exec": [
+									"const fsLib = pm.require('@automotive-demo/local-filesystem-api-lib');",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"var fileName = jsonData.args.fileName;",
+									"var directoryName = jsonData.args.directoryName;",
+									"var fileContent = jsonData.data;",
+									"",
+									"pm.test(\"List files\", async () => {",
+									"    try {",
+									"        await fsLib.setupAuth();",
+									"        ",
+									"        const dirContents = await fsLib.listDirectory(directoryName);",
+									"         // Find our file in the directory listing",
+									"        const foundFile = dirContents.find(item => ",
+									"            item.name === fileName && ",
+									"            !item.isDirectory",
+									"        );",
+									"        ",
+									"        // Verify file exists and has correct properties",
+									"        pm.expect(foundFile.size).to.be.greaterThan(0);",
+									"",
+									"    } catch (error) {",
+									"        pm.expect.fail(error.message);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {
+									"@automotive-demo/local-filesystem-api-lib": {
+										"id": "0195244c-fbb7-7035-8ebd-2a9585bd115e"
+									}
+								}
+							}
+						}
+					],
+					"id": "582006d3-0192-4ca6-b3d7-cc1ee4e1a2aa",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "/**\n * Filesystem API Library\n * A collection of reusable functions for interacting with the filesystem API\n */\n\n/**\n * Get authentication token from parameter or environment\n * @param {string} [token] - Optional token parameter\n * @returns {string} The token to use\n * @throws {Error} If no token is available\n */\nfunction getToken(token) {\n    const envToken = pm.variables.get('token');\n    if (!token && !envToken) {\n        throw new Error('No token provided and no token found in environment');\n    }\n    return token || envToken;\n}\n\n/**\n * Setup authentication token\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from the auth setup endpoint\n */\nasync function setupAuth(token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/auth/setup`,\n        method: 'POST',\n        header: { 'Content-Type': 'application/json' },\n        body: { mode: 'raw', raw: JSON.stringify({ token: authToken }) }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Auth setup failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\n/**\n * Read file contents\n * @param {string} path - Path to the file\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<string>} File contents\n */\nasync function readFile(path, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'GET',\n        header: { 'Authorization': `Bearer ${authToken}` }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Read file failed: ${response.json().error}`);\n    }\n    return response.text();\n}\n\n/**\n * Create a new file\n * @param {string} path - Path where to create the file\n * @param {string} content - File content\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from create file endpoint\n */\nasync function createFile(path, content, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'POST',\n        header: {\n            'Authorization': `Bearer ${authToken}`,\n            'Content-Type': 'application/json'\n        },\n        body: {\n            mode: 'raw',\n            raw: { content }\n        }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Create file failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\n/**\n * Update file contents\n * @param {string} path - Path to the file\n * @param {string} content - New file content\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from update file endpoint\n */\nasync function updateFile(path, content, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'PUT',\n        header: {\n            'Authorization': `Bearer ${authToken}`,\n            'Content-Type': 'application/json'\n        },\n        body: {\n            mode: 'raw',\n            raw: { content }\n        }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Update file failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\n/**\n * Delete a file\n * @param {string} path - Path to the file to delete\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from delete file endpoint\n */\nasync function deleteFile(path, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'DELETE',\n        header: { 'Authorization': `Bearer ${authToken}` }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Delete file failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\nmodule.exports = {\n    setupAuth,\n    readFile,\n    createFile,\n    updateFile,\n    deleteFile\n}; ",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://postman-echo.com/post?fileName=your-file&directoryName=",
+							"protocol": "https",
+							"host": [
+								"postman-echo",
+								"com"
+							],
+							"path": [
+								"post"
+							],
+							"query": [
+								{
+									"key": "fileName",
+									"value": "your-file"
+								},
+								{
+									"key": "directoryName",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "ed79cc94-a326-4b7c-acb1-ed37b26d3d62",
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "/**\n * Filesystem API Library\n * A collection of reusable functions for interacting with the filesystem API\n */\n\n/**\n * Get authentication token from parameter or environment\n * @param {string} [token] - Optional token parameter\n * @returns {string} The token to use\n * @throws {Error} If no token is available\n */\nfunction getToken(token) {\n    const envToken = pm.variables.get('token');\n    if (!token && !envToken) {\n        throw new Error('No token provided and no token found in environment');\n    }\n    return token || envToken;\n}\n\n/**\n * Setup authentication token\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from the auth setup endpoint\n */\nasync function setupAuth(token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/auth/setup`,\n        method: 'POST',\n        header: { 'Content-Type': 'application/json' },\n        body: { mode: 'raw', raw: JSON.stringify({ token: authToken }) }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Auth setup failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\n/**\n * Read file contents\n * @param {string} path - Path to the file\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<string>} File contents\n */\nasync function readFile(path, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'GET',\n        header: { 'Authorization': `Bearer ${authToken}` }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Read file failed: ${response.json().error}`);\n    }\n    return response.text();\n}\n\n/**\n * Create a new file\n * @param {string} path - Path where to create the file\n * @param {string} content - File content\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from create file endpoint\n */\nasync function createFile(path, content, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'POST',\n        header: {\n            'Authorization': `Bearer ${authToken}`,\n            'Content-Type': 'application/json'\n        },\n        body: {\n            mode: 'raw',\n            raw: { content }\n        }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Create file failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\n/**\n * Update file contents\n * @param {string} path - Path to the file\n * @param {string} content - New file content\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from update file endpoint\n */\nasync function updateFile(path, content, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'PUT',\n        header: {\n            'Authorization': `Bearer ${authToken}`,\n            'Content-Type': 'application/json'\n        },\n        body: {\n            mode: 'raw',\n            raw: { content }\n        }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Update file failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\n/**\n * Delete a file\n * @param {string} path - Path to the file to delete\n * @param {string} [token] - Optional authentication token\n * @returns {Promise<Object>} Response from delete file endpoint\n */\nasync function deleteFile(path, token) {\n    const authToken = getToken(token);\n    const response = await pm.sendRequest({\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\n        method: 'DELETE',\n        header: { 'Authorization': `Bearer ${authToken}` }\n    });\n    \n    if (response.code !== 200) {\n        throw new Error(`Delete file failed: ${response.json().error}`);\n    }\n    return response.json();\n}\n\nmodule.exports = {\n    setupAuth,\n    readFile,\n    createFile,\n    updateFile,\n    deleteFile\n}; ",
+									"options": {
+										"raw": {
+											"language": "text"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://postman-echo.com/post?fileName=your-file&directoryName=",
+									"protocol": "https",
+									"host": [
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"post"
+									],
+									"query": [
+										{
+											"key": "fileName",
+											"value": "your-file"
+										},
+										{
+											"key": "directoryName",
+											"value": ""
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 20 Feb 2025 18:20:21 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "5181"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"143d-soa6qNXYGcYmqwf/kWZ73/fKF80\""
+								},
+								{
+									"key": "set-cookie",
+									"value": "sails.sid=s%3ANnKpIyDExBuC84wN9TIjU5WUiT2fY1xw.mOeJgmd9uCu7DXkx%2FWu60WjRBSBEfvAKESRl7dudL2w; Path=/; HttpOnly"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"args\": {\n        \"fileName\": \"your-file\",\n        \"directoryName\": \"\"\n    },\n    \"data\": \"/**\\n * Filesystem API Library\\n * A collection of reusable functions for interacting with the filesystem API\\n */\\n\\n/**\\n * Get authentication token from parameter or environment\\n * @param {string} [token] - Optional token parameter\\n * @returns {string} The token to use\\n * @throws {Error} If no token is available\\n */\\nfunction getToken(token) {\\n    const envToken = pm.variables.get('token');\\n    if (!token && !envToken) {\\n        throw new Error('No token provided and no token found in environment');\\n    }\\n    return token || envToken;\\n}\\n\\n/**\\n * Setup authentication token\\n * @param {string} [token] - Optional authentication token\\n * @returns {Promise<Object>} Response from the auth setup endpoint\\n */\\nasync function setupAuth(token) {\\n    const authToken = getToken(token);\\n    const response = await pm.sendRequest({\\n        url: `${pm.variables.get('baseUrl')}/api/auth/setup`,\\n        method: 'POST',\\n        header: { 'Content-Type': 'application/json' },\\n        body: { mode: 'raw', raw: JSON.stringify({ token: authToken }) }\\n    });\\n    \\n    if (response.code !== 200) {\\n        throw new Error(`Auth setup failed: ${response.json().error}`);\\n    }\\n    return response.json();\\n}\\n\\n/**\\n * Read file contents\\n * @param {string} path - Path to the file\\n * @param {string} [token] - Optional authentication token\\n * @returns {Promise<string>} File contents\\n */\\nasync function readFile(path, token) {\\n    const authToken = getToken(token);\\n    const response = await pm.sendRequest({\\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\\n        method: 'GET',\\n        header: { 'Authorization': `Bearer ${authToken}` }\\n    });\\n    \\n    if (response.code !== 200) {\\n        throw new Error(`Read file failed: ${response.json().error}`);\\n    }\\n    return response.text();\\n}\\n\\n/**\\n * Create a new file\\n * @param {string} path - Path where to create the file\\n * @param {string} content - File content\\n * @param {string} [token] - Optional authentication token\\n * @returns {Promise<Object>} Response from create file endpoint\\n */\\nasync function createFile(path, content, token) {\\n    const authToken = getToken(token);\\n    const response = await pm.sendRequest({\\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\\n        method: 'POST',\\n        header: {\\n            'Authorization': `Bearer ${authToken}`,\\n            'Content-Type': 'application/json'\\n        },\\n        body: {\\n            mode: 'raw',\\n            raw: { content }\\n        }\\n    });\\n    \\n    if (response.code !== 200) {\\n        throw new Error(`Create file failed: ${response.json().error}`);\\n    }\\n    return response.json();\\n}\\n\\n/**\\n * Update file contents\\n * @param {string} path - Path to the file\\n * @param {string} content - New file content\\n * @param {string} [token] - Optional authentication token\\n * @returns {Promise<Object>} Response from update file endpoint\\n */\\nasync function updateFile(path, content, token) {\\n    const authToken = getToken(token);\\n    const response = await pm.sendRequest({\\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\\n        method: 'PUT',\\n        header: {\\n            'Authorization': `Bearer ${authToken}`,\\n            'Content-Type': 'application/json'\\n        },\\n        body: {\\n            mode: 'raw',\\n            raw: { content }\\n        }\\n    });\\n    \\n    if (response.code !== 200) {\\n        throw new Error(`Update file failed: ${response.json().error}`);\\n    }\\n    return response.json();\\n}\\n\\n/**\\n * Delete a file\\n * @param {string} path - Path to the file to delete\\n * @param {string} [token] - Optional authentication token\\n * @returns {Promise<Object>} Response from delete file endpoint\\n */\\nasync function deleteFile(path, token) {\\n    const authToken = getToken(token);\\n    const response = await pm.sendRequest({\\n        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,\\n        method: 'DELETE',\\n        header: { 'Authorization': `Bearer ${authToken}` }\\n    });\\n    \\n    if (response.code !== 200) {\\n        throw new Error(`Delete file failed: ${response.json().error}`);\\n    }\\n    return response.json();\\n}\\n\\nmodule.exports = {\\n    setupAuth,\\n    readFile,\\n    createFile,\\n    updateFile,\\n    deleteFile\\n}; \",\n    \"files\": {},\n    \"form\": {},\n    \"headers\": {\n        \"host\": \"postman-echo.com\",\n        \"x-request-start\": \"t1740075621.123\",\n        \"connection\": \"close\",\n        \"content-length\": \"4188\",\n        \"x-forwarded-proto\": \"https\",\n        \"x-forwarded-port\": \"443\",\n        \"x-amzn-trace-id\": \"Root=1-67b77265-10db588672918a563fa2b9b2\",\n        \"authorization\": \"Bearer postman-secret-token\",\n        \"content-type\": \"text/plain\",\n        \"user-agent\": \"PostmanRuntime/7.43.0\",\n        \"accept\": \"*/*\",\n        \"postman-token\": \"2ca069e2-0f0d-43f4-8586-cac94db09007\",\n        \"accept-encoding\": \"gzip, deflate, br\",\n        \"cookie\": \"sails.sid=s%3AnSW56RoEgLdDy16RVVsep4LXEONFuE4t.EWifSKmDIlEQAzIIvlKv87Bnv0rU5nX4Swy0cg9vwM0\"\n    },\n    \"json\": null,\n    \"url\": \"https://postman-echo.com/post?fileName=your-file&directoryName=\"\n}"
+						}
+					]
 				}
 			],
 			"id": "16dd35ee-bd5d-4b5d-bd7f-627a9993c23a"
