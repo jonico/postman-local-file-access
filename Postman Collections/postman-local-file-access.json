@@ -2971,7 +2971,7 @@
 					]
 				},
 				{
-					"name": "Create a file in a subdirectory and then delete both of them again",
+					"name": "Upload a file in a subdirectory and then delete both of them again",
 					"event": [
 						{
 							"listen": "test",
