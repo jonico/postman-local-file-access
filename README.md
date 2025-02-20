@@ -1,10 +1,6 @@
 # postman-local-file-access
 Simple node app to expose local filesystem CRUD for use with Postman including a reusable package library for use in pre- and post-request scripts
 
-# Local FileSystem REST API
-
-A secure REST API that exposes local filesystem operations with authentication.
-
 ## Features
 
 - 🔒 Secure authentication with token
@@ -18,7 +14,6 @@ A secure REST API that exposes local filesystem operations with authentication.
 ## Web UI
 
 Access the web interface at `http://localhost:3000`
-
 
 ## Reusable Postman Library
 
@@ -210,9 +205,3 @@ curl -X POST http://localhost:3000/api/auth -H "Content-Type: application/json" 
 - All API endpoints require authentication
 - Initial token setup can only be done once
 - Docker container runs with limited privileges
-
-
-
-
-
-
