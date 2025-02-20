@@ -3336,6 +3336,7 @@
 									"",
 									"pm.test(\"Create and delete files in subdirectory\", async () => {",
 									"    try {",
+									"        await fsLib.setupAuth();",
 									"        // Create directory first if specified",
 									"        if (directoryName) {",
 									"           await fsLib.createDirectory(directoryName);",
