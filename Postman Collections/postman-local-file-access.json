@@ -2676,6 +2676,7 @@
 									"",
 									"",
 									"var jsonData = pm.response.json();",
+									"var filename",
 									"",
 									"// test whether company field is not blank",
 									"pm.test(\"Company field is not blank\", function () {",
@@ -2726,7 +2727,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://postman-echo.com/post?filename=your-file",
+							"raw": "https://postman-echo.com/post?fileName=your-file",
 							"protocol": "https",
 							"host": [
 								"postman-echo",
@@ -2737,7 +2738,7 @@
 							],
 							"query": [
 								{
-									"key": "filename",
+									"key": "fileName",
 									"value": "your-file"
 								},
 								{
