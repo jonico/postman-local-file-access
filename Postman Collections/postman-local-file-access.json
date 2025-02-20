@@ -3,7 +3,7 @@
 		"_postman_id": "2169d69e-0db4-490a-8185-fe18b0a100c5",
 		"name": "Postman Filesystem API",
 		"description": "# Expose local directory CRUD for use with Postman\n\n## Features\n\n- 🔒 Secure authentication with token\n- 📁 CRUD operations for files and directories\n- 🔍 Directory listing\n- 🚫 Path traversal protection\n- 🌐 Web UI for easy file management\n- 🐳 Docker support\n- 📚 Postman collection included\n\n### Authentication\n\nAll API endpoints (except token setup) require a Bearer token in the Authorization header:\n```\nAuthorization: Bearer your-token\n```\n\n### Endpoints\n\n#### Authentication\n- `POST /api/auth/setup` - Set up authentication token\n  ```http\n  POST /api/auth/setup\n  Content-Type: application/json\n\n  {\n      \"token\": \"your-secret-token\"\n  }\n  ```\n\n#### Files\n- `GET /api/files/{path}` - Read file contents\n  - Returns file content with appropriate Content-Type header\n  - Supports both binary and text files\n  - Returns 400 if path points to a directory\n  - Returns 404 if file not found\n\n- `POST /api/files/{path}` - Create/Upload file\n  - Upload using multipart/form-data with \"file\" field\n  - Returns 400 if path points to a directory\n  - Returns 404 if parent directory not found\n\n- `PUT /api/files/{path}` - Update file contents\n  ```http\n  Content-Type: application/json\n\n  {\n      \"content\": \"Updated file content\"\n  }\n  ```\n  - Returns 400 if path points to a directory\n  - Returns 404 if file not found\n\n- `DELETE /api/files/{path}` - Delete file\n  - Returns 400 if path points to a directory\n  - Returns 404 if file not found\n\n#### Directories\n- `GET /api/directories/{path}` - List directory contents\n  - Lists all files and subdirectories\n  - Use without path parameter to list root directory\n  - Returns array of items with metadata:\n  ```json\n  [\n      {\n          \"name\": \"example.txt\",\n          \"path\": \"folder/example.txt\",\n          \"isDirectory\": false,\n          \"size\": 1234,\n          \"modified\": \"2024-01-20T12:00:00.000Z\"\n      }\n  ]\n  ```\n\n- `POST /api/directories/{path}` - Create directory\n  - Returns 400 if directory exists\n  - Returns 404 if parent directory not found\n\n- `DELETE /api/directories/{path}` - Delete directory\n  - Returns 400 if directory not empty\n  - Returns 404 if directory not found\n\n### Error Responses\n\nAll error responses follow this format:\n```json\n{\n    \"error\": \"Error message description\",\n    \"code\": \"ERROR_CODE\"  // Optional error code\n}\n```\n\nCommon status codes:\n- 400: Bad Request\n- 401: Unauthorized\n- 404: Not Found\n- 500: Internal Server Error",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.postman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
@@ -2658,6 +2658,24 @@
 				}
 			],
 			"id": "b0957484-3393-445a-b77d-e6296258febc"
+		},
+		{
+			"name": "Package-Library-Use",
+			"item": [
+				{
+					"name": "echo",
+					"id": "ca142ead-043c-447e-9618-d79e6a040979",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"id": "16dd35ee-bd5d-4b5d-bd7f-627a9993c23a"
 		}
 	],
 	"auth": {
