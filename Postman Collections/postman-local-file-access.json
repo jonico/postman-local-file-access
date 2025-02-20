@@ -2670,43 +2670,34 @@
 							"script": {
 								"id": "30f0f6e0-7dda-446b-95a7-5515d975f3c1",
 								"exec": [
+									"const fsLib = pm.require('@automotive-demo/filesystem-api');",
+									"",
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
 									"",
 									"var jsonData = pm.response.json();",
-									"var filename",
+									"var fileName = jsonData.args.fileName;",
+									"var fileContent = jsonData.data;",
 									"",
-									"// test whether company field is not blank",
-									"pm.test(\"Company field is not blank\", function () {",
-									"    pm.expect(jsonData.args.company).to.not.be.empty;",
-									"    // save company to a collection variable",
-									"    pm.collectionVariables.set(\"company\", jsonData.args.company);",
-									"",
-									"    // remove all special characters from company name and only use small letters",
-									"    var companyId = jsonData.args.company.replace(/[^a-zA-Z0-9]/g, \"\").toLowerCase();",
-									"",
-									"    // save company id to a collection variable",
-									"    pm.collectionVariables.set(\"companyId\", companyId);",
-									"})",
-									"",
-									"pm.test(\"Language Field is not blank and should be saved to collection variable with same name\", function () {",
-									"     v",
-									"     pm.expect(responseBody.args.language).to.exist.and.to.not.equal(\"\", \"Language field should not be blank\");",
-									"     pm.collectionVariables.set(\"language\", responseBody.args.language);",
-									"});",
-									"",
-									"pm.test(\"statusCode field is not blank and statusCode can be parsed into a number and should be saved to collection variable with same name\", function () {",
-									"    var responseBody = pm.response.json().args;",
-									"    pm.expect(responseBody.statusCode).to.exist.and.to.not.equal(\"\");",
-									"    pm.expect(parseInt(responseBody.statusCode)).to.not.be.NaN;",
-									"    pm.collectionVariables.set(\"statusCode\", parseInt(responseBody.statusCode));",
-									"});",
-									"   "
+									"pm.test(\"Create and read file\", async () => {",
+									"    try {",
+									"        await fsLib.setupAuth(${{}});",
+									"        await fsLib.createFile(fileName, fileContent);",
+									"        const content = await fsLib.readFile(fileName);",
+									"        pm.expect(content).to.equal(fileContent);",
+									"    } catch (error) {",
+									"        pm.expect.fail(error.message);",
+									"    }",
+									"});"
 								],
 								"type": "text/javascript",
-								"packages": {}
+								"packages": {
+									"@automotive-demo/filesystem-api": {
+										"id": "01952433-2f31-71cc-a6dd-0b45ea5c38b8"
+									}
+								}
 							}
 						}
 					],
