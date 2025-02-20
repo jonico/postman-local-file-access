@@ -3013,7 +3013,7 @@
 									"    try {",
 									"        // Create directory first if specified",
 									"        if (directoryName) {",
-									"        //    await fsLib.createDirectory(directoryName);",
+									"           await fsLib.createDirectory(directoryName);",
 									"        }",
 									"",
 									"        // Get the file data from the response",
@@ -3026,7 +3026,7 @@
 									"        // Read back the file and verify its contents",
 									"        const uploadedContent = await fsLib.readFile(fullPath);",
 									"        console.log(`Downloaded file size: ${uploadedContent.length} bytes`);",
-									"        pm.test(\"File was uploaded with correct size\", () => {",
+									"        pm.test(\"File was downloaded with non empty size\", () => {",
 									"            pm.expect(uploadedContent.length).to.be.greaterThan(0);",
 									"        });",
 									"        ",
@@ -3039,11 +3039,11 @@
 									"        }",
 									"        ",
 									"        // Delete the file first",
-									"        //await fsLib.deleteFile(fullPath);",
+									"        await fsLib.deleteFile(fullPath);",
 									"        ",
 									"        // Now delete the empty directory (only if directory was specified)",
 									"        if (directoryName) {",
-									"        //    await fsLib.deleteDirectory(directoryName);",
+									"            await fsLib.deleteDirectory(directoryName);",
 									"        }",
 									"    } catch (error) {",
 									"        pm.expect.fail(error.message);",
@@ -3073,12 +3073,12 @@
 									"key": "",
 									"type": "file",
 									"uuid": "55c6c67f-cd6c-4f85-a074-aa9c2ca5053f",
-									"src": "/Users/johannesnicolai/Downloads/7-coders.jpeg"
+									"src": "/Users/johannesnicolai/Downloads/file2.txt"
 								}
 							]
 						},
 						"url": {
-							"raw": "https://postman-echo.com/post?fileName=my-file.jpeg&directoryName=my-subdirectory",
+							"raw": "https://postman-echo.com/post?fileName=my-file.txt&directoryName=my-subdirectory",
 							"protocol": "https",
 							"host": [
 								"postman-echo",
@@ -3090,7 +3090,7 @@
 							"query": [
 								{
 									"key": "fileName",
-									"value": "my-file.jpeg"
+									"value": "my-file.txt"
 								},
 								{
 									"key": "directoryName",
