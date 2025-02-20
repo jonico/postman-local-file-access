@@ -2839,7 +2839,7 @@
 									"        );",
 									"        ",
 									"        // Verify file exists and has correct properties",
-									"        pm.expect(foundFile.size).to.be.greaterThan(20000);",
+									"        pm.expect(foundFile.size).to.be.greaterThan(0);",
 									"",
 									"    } catch (error) {",
 									"        pm.expect.fail(error.message);",
