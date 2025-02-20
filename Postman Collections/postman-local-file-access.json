@@ -2680,7 +2680,7 @@
 									"    var fileName = jsonData.args.fileName;",
 									"    var fileContent = jsonData.data;",
 									"",
-									"    pm.test(\"Create and read file\", async () => { //Wrapped the code containing 'await' keyword inside an async function",
+									"    pm.test(\"Create and read file\", async () => {",
 									"        try {",
 									"            await fsLib.setupAuth();",
 									"            await fsLib.createFile(fileName, fileContent);",
