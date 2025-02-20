@@ -1170,7 +1170,7 @@
 								}
 							}
 						},
-						"url": "{{baseUrl}}/api/files/file2.txt",
+						"url": "{{baseUrl}}/api/files/file.txt",
 						"description": "# File Upload\n\nThis endpoint allows you to upload a file to the server.\n\n## Request Body\n\n- `content`: The content of the file to be uploaded.\n    \n\n## Response\n\n- `message`: A message indicating the status of the file upload."
 					},
 					"response": [
