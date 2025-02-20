@@ -2681,11 +2681,11 @@
 									"var fileName = jsonData.args.fileName;",
 									"var fileContent = jsonData.data;",
 									"",
-									"pm.test(\"Create and read file\", async () => {",
+									"pm.test(\"Create and read file\", () => {",
 									"    try {",
-									"        await fsLib.setupAuth();",
-									"        await fsLib.createFile(fileName, fileContent);",
-									"        const content = await fsLib.readFile(fileName);",
+									"        fsLib.setupAuth();",
+									"        fsLib.createFile(fileName, fileContent);",
+									"        const content = fsLib.readFile(fileName);",
 									"        pm.expect(content).to.equal(fileContent);",
 									"    } catch (error) {",
 									"        pm.expect.fail(error.message);",
@@ -2731,12 +2731,6 @@
 								{
 									"key": "fileName",
 									"value": "your-file"
-								},
-								{
-									"key": "order",
-									"value": "",
-									"type": "text",
-									"disabled": true
 								}
 							]
 						}
@@ -2833,7 +2827,7 @@
 									"var directoryName = jsonData.args.directoryName;",
 									"var fileContent = jsonData.data;",
 									"",
-									"pm.test(\"List files\", async () => {",
+									"pm.test(\"List files\", () => {",
 									"    try {",
 									"        await fsLib.setupAuth();",
 									"        ",
@@ -2880,7 +2874,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://postman-echo.com/post?fileName=your-file&directoryName=/",
+							"raw": "https://postman-echo.com/post?fileName=your-file&directoryName=",
 							"protocol": "https",
 							"host": [
 								"postman-echo",
@@ -2896,7 +2890,7 @@
 								},
 								{
 									"key": "directoryName",
-									"value": "/"
+									"value": ""
 								}
 							]
 						}
