@@ -139,13 +139,13 @@ npm start
 #### Build Docker Image
 
 ```bash
-docker build -t local-file-api .
+docker build -t local-filesystem-api .
 ```
 
 #### Run Docker Container
 
 ```bash
-docker run -p 3000:3000 -v $(pwd)/data:/app/data filesystem-api
+docker run -p 3000:3000 -v $(pwd)/data:/app/data local-filesystem-api
 ```
 
 ## Authentication
@@ -159,14 +159,13 @@ curl -X POST http://localhost:3000/api/auth -H "Content-Type: application/json" 
 ## API Endpoints
 
 - `POST /api/auth/setup` - Initial token setup (only available if no token is set)
-- `GET /api/files` - List directory contents
 - `GET /api/files/:path` - Read file contents
-- `POST /api/files/:path` - Create/Upload file
-- `PUT /api/files/:path` - Update file contents
-- `DELETE /api/files/:path` - Delete file
-- `GET /api/directories` - List directories
+- `POST /api/files/:path` - Create/Upload/Override file
+- `PUT /api/files/:path` - Update file contents if it exists
+- `DELETE /api/files/:path` - Delete file if it exists
+- `GET /api/directories` - List directory contents
 - `POST /api/directories/:path` - Create directory
-- `DELETE /api/directories/:path` - Delete directory
+- `DELETE /api/directories/:path` - Delete (empty )directory
 
 ## Web UI
 
