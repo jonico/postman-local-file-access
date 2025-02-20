@@ -1,5 +1,5 @@
 # postman-local-file-access
-Simple node app to expose local directory CRUD for use with Postman
+Simple node app to expose local filesystem CRUD for use with Postman including a reusable package library for use in pre- and post-request scripts
 
 # Local FileSystem REST API
 
@@ -11,9 +11,44 @@ A secure REST API that exposes local filesystem operations with authentication.
 - 📁 CRUD operations for files and directories
 - 🔍 Directory listing
 - 🚫 Path traversal protection
-- 🌐 Web UI for easy file management
+- 🌐 Web UI for easy file management / testing
 - 🐳 Docker support
 - 📚 [Postman collection](Postman%20Collections/postman-local-file-access.json) included for testing
+
+## Web UI
+
+Access the web interface at `http://localhost:3000`
+
+
+## Reusable Postman Library
+
+A reusable Postman library is included in `local-filesystem-api-lib.js`. This library provides a clean interface to interact with the API:
+
+```javascript
+const fsLib = pm.require('@your-postman-domain/local-filesystem-api-lib');
+
+// Setup authentication
+await fsLib.setupAuth('your-token');
+
+// Create and read files
+await fsLib.createFile('example.txt', 'Hello World');
+const content = await fsLib.readFile('example.txt');
+
+// Upload binary files (base64)
+await fsLib.uploadFile('image.png', 'data:application/octet-stream;base64,...');
+
+// Work with directories
+await fsLib.createDirectory('my-folder');
+const dirContents = await fsLib.listDirectory('my-folder');
+await fsLib.deleteDirectory('my-folder');
+```
+
+Check the "Post Request Scripts" folder in the Postman collection for more examples on how to use in post-request scripts, including:
+- File upload and verification
+- Directory operations
+- Base64 file handling
+- Error handling
+- Working with subdirectories
 
 ## Testing with Postman
 
@@ -22,6 +57,8 @@ Import the [Postman collection](Postman%20Collections/postman-local-file-access.
 - File operations (read, create, update, delete)
 - Directory operations (list, create, delete)
 - Example requests with proper headers and body formats
+- Examples of how to use the reusable library in post-request scripts
+
 
 ## API Documentation
 
@@ -136,17 +173,28 @@ npm start
 
 ### Docker Mode
 
-#### Build Docker Image
+#### Build Docker Image Locally
 
 ```bash
 docker build -t local-filesystem-api .
 ```
 
-#### Run Docker Container
+#### Run Local Docker Image
 
 ```bash
 docker run -p 3000:3000 -v $(pwd)/data:/app/data local-filesystem-api
 ```
+
+#### Run Pre-built Image from GitHub Container Registry
+
+```bash
+docker run -p 3000:3000 -v $(pwd)/data:/app/data ghcr.io/postman-solutions-eng/postman-local-filesystem-api:latest
+```
+
+This will:
+- Pull the latest image from GitHub Container Registry
+- Map port 3000 to your local machine
+- Mount your local `data` directory to the container
 
 ## Authentication
 
@@ -156,31 +204,12 @@ If no `AUTH_TOKEN` is set in the environment variables, you need to set it via t
 curl -X POST http://localhost:3000/api/auth -H "Content-Type: application/json" -d '{"token": "your-token"}'
 ```
 
-## API Endpoints
-
-- `POST /api/auth/setup` - Initial token setup (only available if no token is set)
-- `GET /api/files/:path` - Read file contents
-- `POST /api/files/:path` - Create/Upload/Override file
-- `PUT /api/files/:path` - Update file contents if it exists
-- `DELETE /api/files/:path` - Delete file if it exists
-- `GET /api/directories` - List directory contents
-- `POST /api/directories/:path` - Create directory
-- `DELETE /api/directories/:path` - Delete (empty )directory
-
-## Web UI
-
-Access the web interface at `http://localhost:3000`
-
 ## Security
 
 - Path traversal protection prevents accessing files outside the root directory
 - All API endpoints require authentication
 - Initial token setup can only be done once
 - Docker container runs with limited privileges
-
-## Postman Collection
-
-Import the included `FileSystem-API.postman_collection.json` to test all endpoints.
 
 
 
