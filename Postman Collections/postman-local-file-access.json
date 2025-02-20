@@ -2681,7 +2681,7 @@
 									"var fileName = jsonData.args.fileName;",
 									"var fileContent = jsonData.data;",
 									"",
-									"pm.test(\"Create and read file\", async () => {",
+									"pm.test(\"Create and read file\", () => {",
 									"    try {",
 									"        await fsLib.setupAuth();",
 									"        await fsLib.createFile(fileName, fileContent);",
