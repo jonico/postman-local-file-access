@@ -3500,7 +3500,8 @@
 					]
 				}
 			],
-			"id": "16dd35ee-bd5d-4b5d-bd7f-627a9993c23a"
+			"id": "16dd35ee-bd5d-4b5d-bd7f-627a9993c23a",
+			"description": "This folder contains post-request-scripts showing how to make use of the reusable library that is calling the API described by this collection"
 		}
 	],
 	"auth": {
