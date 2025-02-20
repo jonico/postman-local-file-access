@@ -17,7 +17,7 @@ Access the web interface at `http://localhost:3000`
 
 ## Reusable Postman Library
 
-A reusable Postman library is included in `local-filesystem-api-lib.js`. This library provides a clean interface to interact with the API:
+A reusable Postman library is included in [`local-filesystem-api-lib.js`](local-filesystem-api-lib.js). This library provides a clean interface to interact with the API:
 
 ```javascript
 const fsLib = pm.require('@your-postman-domain/local-filesystem-api-lib');
@@ -38,7 +38,7 @@ const dirContents = await fsLib.listDirectory('my-folder');
 await fsLib.deleteDirectory('my-folder');
 ```
 
-Check the "Post Request Scripts" folder in the Postman collection for more examples on how to use in post-request scripts, including:
+Check the ["Post Request Scripts" folder in the Postman collection](Postman%20Collections/postman-local-file-access.json) for more examples on how to use in post-request scripts, including:
 - File upload and verification
 - Directory operations
 - Base64 file handling
