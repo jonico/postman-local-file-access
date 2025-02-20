@@ -133,10 +133,73 @@ async function deleteFile(path, token) {
     return response.json();
 }
 
+/**
+ * List directory contents
+ * @param {string} [path=''] - Path to the directory
+ * @param {string} [token] - Optional authentication token
+ * @returns {Promise<Array>} Array of directory contents with metadata
+ */
+async function listDirectory(path = '', token) {
+    const authToken = getToken(token);
+    const response = await pm.sendRequest({
+        url: `${pm.variables.get('baseUrl')}/api/directories/${path}`,
+        method: 'GET',
+        header: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    if (response.code !== 200) {
+        throw new Error(`List directory failed: ${response.json().error}`);
+    }
+    return response.json();
+}
+
+/**
+ * Create a new directory
+ * @param {string} path - Path where to create the directory
+ * @param {string} [token] - Optional authentication token
+ * @returns {Promise<Object>} Response from create directory endpoint
+ */
+async function createDirectory(path, token) {
+    const authToken = getToken(token);
+    const response = await pm.sendRequest({
+        url: `${pm.variables.get('baseUrl')}/api/directories/${path}`,
+        method: 'POST',
+        header: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    if (response.code !== 200) {
+        throw new Error(`Create directory failed: ${response.json().error}`);
+    }
+    return response.json();
+}
+
+/**
+ * Delete a directory
+ * @param {string} path - Path to the directory to delete
+ * @param {string} [token] - Optional authentication token
+ * @returns {Promise<Object>} Response from delete directory endpoint
+ */
+async function deleteDirectory(path, token) {
+    const authToken = getToken(token);
+    const response = await pm.sendRequest({
+        url: `${pm.variables.get('baseUrl')}/api/directories/${path}`,
+        method: 'DELETE',
+        header: { 'Authorization': `Bearer ${authToken}` }
+    });
+    
+    if (response.code !== 200) {
+        throw new Error(`Delete directory failed: ${response.json().error}`);
+    }
+    return response.json();
+}
+
 module.exports = {
     setupAuth,
     readFile,
     createFile,
     updateFile,
-    deleteFile
+    deleteFile,
+    listDirectory,
+    createDirectory,
+    deleteDirectory
 }; 
