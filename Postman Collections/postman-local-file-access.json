@@ -2757,9 +2757,9 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"",
 									"var jsonData = pm.response.json();",
 									"var fileName = jsonData.args.fileName;",
+									"var directoryName = jsonData.args.directoryName;",
 									"var fileContent = jsonData.data;",
 									"",
 									"pm.test(\"Create and read file\", async () => {",
@@ -2768,6 +2768,10 @@
 									"        await fsLib.createFile(fileName, fileContent);",
 									"        const content = await fsLib.readFile(fileName);",
 									"        pm.expect(content).to.equal(fileContent);",
+									"",
+									"        const directoryList = await fsLib.listDirectory(directoryName);",
+									"        pm.expect(directoryList.includes(fileName)).to.be.true;",
+									"        pm.expect(directoryList.includes(fileName)).to.be.true;",
 									"    } catch (error) {",
 									"        pm.expect.fail(error.message);",
 									"    }",
@@ -2799,7 +2803,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://postman-echo.com/post?fileName=your-file",
+							"raw": "https://postman-echo.com/post?fileName=your-file&directoryName=/",
 							"protocol": "https",
 							"host": [
 								"postman-echo",
@@ -2814,10 +2818,8 @@
 									"value": "your-file"
 								},
 								{
-									"key": "order",
-									"value": "",
-									"type": "text",
-									"disabled": true
+									"key": "directoryName",
+									"value": "/"
 								}
 							]
 						}
