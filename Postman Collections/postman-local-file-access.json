@@ -3001,7 +3001,7 @@
 									"",
 									"        // Read back the file and verify its contents",
 									"        const uploadedContent = await fsLib.readFile(fullPath);",
-									"        console.log(`Uploaded file size: ${uploadedContent.length} bytes`);",
+									"        console.log(`Downloaded file size: ${uploadedContent.length} bytes`);",
 									"        pm.test(\"File was uploaded with correct size\", () => {",
 									"            pm.expect(uploadedContent.length).to.be.greaterThan(0);",
 									"        });",
