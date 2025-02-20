@@ -2670,7 +2670,7 @@
 							"script": {
 								"id": "30f0f6e0-7dda-446b-95a7-5515d975f3c1",
 								"exec": [
-									"const fsLib = pm.require('@automotive-demo/filesystem-api');",
+									"const fsLib = pm.require('@automotive-demo/local-filesystem-api-lib');",
 									"",
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -2694,8 +2694,8 @@
 								],
 								"type": "text/javascript",
 								"packages": {
-									"@automotive-demo/filesystem-api": {
-										"id": "01952433-2f31-71cc-a6dd-0b45ea5c38b8"
+									"@automotive-demo/local-filesystem-api-lib": {
+										"id": "0195244c-fbb7-7035-8ebd-2a9585bd115e"
 									}
 								}
 							}
