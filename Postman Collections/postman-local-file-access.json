@@ -2978,7 +2978,7 @@
 							"script": {
 								"id": "30f0f6e0-7dda-446b-95a7-5515d975f3c1",
 								"exec": [
-									"const fsLib = require('@automotive-demo/local-filesystem-api-lib');",
+									"const fsLib = pm.require('@automotive-demo/local-filesystem-api-lib');",
 									"",
 									"// Get directory and file names from the query parameters",
 									"const directoryName = pm.response.json().args.directoryName;",
@@ -3023,7 +3023,11 @@
 									"});"
 								],
 								"type": "text/javascript",
-								"packages": {}
+								"packages": {
+									"@automotive-demo/local-filesystem-api-lib": {
+										"id": "0195244c-fbb7-7035-8ebd-2a9585bd115e"
+									}
+								}
 							}
 						}
 					],
@@ -3046,7 +3050,7 @@
 							]
 						},
 						"url": {
-							"raw": "https://postman-echo.com/post?fileName=your-file&directoryName=",
+							"raw": "https://postman-echo.com/post?fileName=your-file&directoryName=my-subdirectory",
 							"protocol": "https",
 							"host": [
 								"postman-echo",
@@ -3062,7 +3066,7 @@
 								},
 								{
 									"key": "directoryName",
-									"value": ""
+									"value": "my-subdirectory"
 								}
 							]
 						}
