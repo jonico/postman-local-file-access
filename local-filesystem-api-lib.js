@@ -193,6 +193,35 @@ async function deleteDirectory(path, token) {
     return response.json();
 }
 
+/**
+ * Upload a file
+ * @param {string} path - Path where to upload the file
+ * @param {string} fileData - The file data (base64 encoded in the format data:application/octet-stream;base64,...) or raw content
+ * @param {string} [token] - Optional authentication token
+ * @returns {Promise<Object>} Response from upload file endpoint
+ */
+async function uploadFile(path, fileData, token) {
+    const authToken = getToken(token);
+    
+    const response = await pm.sendRequest({
+        url: `${pm.variables.get('baseUrl')}/api/files/${path}`,
+        method: 'POST',
+        header: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+        },
+        body: {
+            mode: 'raw',
+            raw: { fileData }
+        }
+    });
+    
+    if (response.code !== 200) {
+        throw new Error(`Upload file failed: ${response.json().error}`);
+    }
+    return response.json();
+}
+
 module.exports = {
     setupAuth,
     readFile,
@@ -201,5 +230,6 @@ module.exports = {
     deleteFile,
     listDirectory,
     createDirectory,
-    deleteDirectory
+    deleteDirectory,
+    uploadFile
 }; 

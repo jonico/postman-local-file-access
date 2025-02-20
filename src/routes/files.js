@@ -119,14 +119,25 @@ router.post('/:path(*)', async (req, res) => {
     } catch (error) {
       if (error.code !== 'ENOENT') throw error;
     }
-    
-    if (!req.files || !req.files.file) {
-      const { content } = req.body;
-      await fsPromises.writeFile(fullPath, content || '');
-    } else {
+
+    // Handle file upload
+    if (req.files && req.files.file) {
       await req.files.file.mv(fullPath);
+    } else {
+      const { content, fileData } = req.body;
+      if (fileData) {
+        if (typeof fileData !== 'string' || !fileData.startsWith('data:application/octet-stream;base64,')) {
+          return res.status(400).json({ 
+            error: 'Invalid fileData format. Must be a data URI string starting with "data:application/octet-stream;base64,"'
+          });
+        }
+        const [, dataPart] = fileData.split(',');
+        await fsPromises.writeFile(fullPath, Buffer.from(dataPart, 'base64'));
+      } else {
+        await fsPromises.writeFile(fullPath, content || '');
+      }
     }
-    
+
     res.json({ message: 'File created successfully' });
   } catch (error) {
     console.error('Error creating file:', error);
