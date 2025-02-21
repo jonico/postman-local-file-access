@@ -11,6 +11,8 @@ Node app to expose the content a local filesystem folder CRUD style including a 
 - 🐳 Docker support
 - 📚 [Postman collection](Postman%20Collections/postman-local-file-access.json) included for testing
 
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://god.gw.postman.com/run-collection/24435735-a7c07b6d-da06-4b12-8c80-dd8934ec10b1?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D24435735-a7c07b6d-da06-4b12-8c80-dd8934ec10b1%26entityType%3Dcollection%26workspaceId%3D7b7621f3-93bc-4ff2-8887-231d2f3c44f3)
+
 ## Web UI
 
 Access the web interface at `http://localhost:3000`
