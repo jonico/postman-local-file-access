@@ -10,7 +10,25 @@
 			"name": "Auth",
 			"item": [
 				{
-					"name": "Setup Token",
+					"name": "Setup Token (if not set already)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4b79476a-92b2-4c3b-b93f-cda168c8e207",
+								"exec": [
+									"pm.test(\"Log 'Token is already set' on 500 error\", function () {",
+									"    if (pm.response.code === 500) {",
+									"        console.log(\"Token is already set\");",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "b7846787-7ade-4c5b-bbb4-60036d0849f2",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -3327,6 +3345,7 @@
 							"script": {
 								"id": "30f0f6e0-7dda-446b-95a7-5515d975f3c1",
 								"exec": [
+									"// please change automotive-demo to your team domain once you imported",
 									"const fsLib = pm.require('@automotive-demo/local-filesystem-api-lib');",
 									"",
 									"// Get directory and file names from the query parameters",
@@ -3502,7 +3521,7 @@
 				}
 			],
 			"id": "16dd35ee-bd5d-4b5d-bd7f-627a9993c23a",
-			"description": "This folder contains post-request-scripts showing how to make use of the reusable library that is calling the API described by this collection"
+			"description": "This folder contains post-request-scripts showing how to make use of the reusable library that is calling the API described by this collection - please adjust the name of the package to your team domain to make it work"
 		}
 	],
 	"auth": {
