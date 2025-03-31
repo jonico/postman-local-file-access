@@ -1,8 +1,8 @@
 /**
  * Filesystem API Library
  * 
- * A collection of reusable functions for interacting with the filesystem API.
- * This library provides a clean interface for common filesystem operations
+ * A collection of reusable functions for interacting with the local filesystem API.
+ * This library provides a clean interface for common local filesystem operations
  * like reading, writing, and managing files and directories through REST endpoints.
  * 
  * GitHub: https://github.com/postman-solutions-eng/postman-local-file-access
