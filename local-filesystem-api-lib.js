@@ -1,6 +1,44 @@
 /**
  * Filesystem API Library
- * A collection of reusable functions for interacting with the filesystem API
+ * 
+ * A collection of reusable functions for interacting with the filesystem API.
+ * This library provides a clean interface for common filesystem operations
+ * like reading, writing, and managing files and directories through REST endpoints.
+ * 
+ * GitHub: https://github.com/postman-solutions-eng/postman-local-file-access
+ * 
+ * This library is part of a Node.js application that exposes local filesystem 
+ * folder access through a REST API. It's specifically designed for use in Postman 
+ * pre- and post-request scripts that need to manipulate local files.
+ * 
+ * Key Features:
+ * - Secure authentication with token
+ * - CRUD operations for files and directories
+ * - Path traversal protection
+ * - Support for binary and text files
+ * - Directory listing and management
+ * 
+ * Prerequisites:
+ * - Requires a running instance of the Filesystem API server
+ * - Valid authentication token
+ * - Postman environment variables:
+ *   - baseUrl: The base URL of your Filesystem API server
+ *   - token: Your authentication token (optional, can be passed directly to functions)
+ * 
+ * Usage Example:
+ * ```javascript
+ * const fsLib = pm.require('@postman-solutions-eng/local-filesystem-api-lib');
+ * 
+ * // Setup authentication
+ * await fsLib.setupAuth('your-token');
+ * 
+ * // Read a file
+ * const content = await fsLib.readFile('path/to/file');
+ * ```
+ * 
+ * For complete documentation and examples, visit:
+ * https://github.com/postman-solutions-eng/postman-local-file-access
+ * 
  */
 
 /**
